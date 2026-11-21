@@ -57,6 +57,15 @@ Live evolution is on in dev. Other modes:
 
 Controls: WASD move, arrow keys turn, Ctrl fire, Space use.
 
+## Deploy the public site
+
+The public site is static: the engine, the game and the saved gene pools in `web/public/pools/`. It makes no API calls.
+
+```sh
+scripts/build.sh
+cd site && pnpm install && pnpm deploy   # Cloudflare Workers static assets
+```
+
 ## Evolution runs and benchmarks
 
 `sim/` drives the game headless with puppeteer.

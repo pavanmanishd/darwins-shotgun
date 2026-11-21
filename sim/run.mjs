@@ -111,7 +111,10 @@ async function runOne(config, port) {
     const end = Date.now() + MINUTES * 60_000;
     while (Date.now() < end) {
       await new Promise((r) => setTimeout(r, SAMPLE_MS));
-      samples.push(await sample(page));
+      const s = await sample(page).catch(() => null);
+      if (!s) continue;
+      samples.push(s);
+      if (s.pool) await writeFile(join(RESULTS, `${config.name}.partial.json`), JSON.stringify({ finalPool: s.pool }));
     }
     await page.screenshot({ path: join(RESULTS, `${config.name}.png`) });
     const summary = { ...summarize(config, samples), pageErrors: errors };
