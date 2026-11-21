@@ -1,0 +1,39 @@
+{
+  "bpm": 150,
+  "bars": 37,
+  "seconds": 59.2,
+  "sections": {
+    "hook": {
+      "from": 0,
+      "to": 2
+    },
+    "intro": {
+      "from": 2,
+      "to": 8
+    },
+    "riser": {
+      "from": 8,
+      "to": 10
+    },
+    "drop1": {
+      "from": 10,
+      "to": 18
+    },
+    "breakdown": {
+      "from": 18,
+      "to": 22
+    },
+    "build": {
+      "from": 22,
+      "to": 26
+    },
+    "drop2": {
+      "from": 26,
+      "to": 34
+    },
+    "outro": {
+      "from": 34,
+      "to": 37
+    }
+  }
+}

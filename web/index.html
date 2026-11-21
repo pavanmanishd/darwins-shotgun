@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Darwin's Shotgun</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <main class="stage">
+      <section class="game">
+        <div class="screen">
+          <canvas id="canvas" tabindex="0" width="640" height="400"></canvas>
+          <div id="thoughts" class="thoughts"></div>
+          <div class="overlay top">
+            <div class="gen">GEN <span id="gen">0</span></div>
+            <div class="alive"><span id="alive">0</span> alive · <span id="mode">LIVE EVOLUTION</span></div>
+          </div>
+          <div id="captions" class="overlay bottom"></div>
+          <div id="banner" class="banner" hidden></div>
+          <div id="click-to-play" class="click-to-play">Click to play · WASD move · ←→ turn · Ctrl fire · Space use</div>
+          <div id="death-card" class="death-card" hidden>
+            <div class="death-label">You lasted</div>
+            <div id="death-time" class="death-time"></div>
+            <div id="death-detail" class="death-detail"></div>
+            <div class="death-actions">
+              <button id="death-share" type="button">Share on X</button>
+              <span>Space to fight again</span>
+            </div>
+          </div>
+          <div id="arena-picker" class="arena-picker" hidden>
+            <h1>Darwin's <span>Shotgun</span></h1>
+            <p>Real DOOM. The imps' brains are JavaScript, written and evolved by Kimi K3.1 Pro on Cerebras.</p>
+            <div class="arena-choices">
+              <button type="button" data-arena="gen0">
+                <b>Gen 0</b>
+                <small>4 brains written by hand. Fixed rules.</small>
+              </button>
+              <button type="button" id="arena-evolved" data-arena="evolved">
+                <b id="arena-evolved-gen">Evolved</b>
+                <small>Bred by Kimi from how a player fought them.</small>
+              </button>
+            </div>
+            <p class="arena-hint">How long can you last? WASD move · ←→ turn · Ctrl fire · Space use</p>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel">
+        <header class="panel-head">
+          <div class="brand">KIMI K3.1 PRO <span>on Cerebras</span></div>
+          <div class="stats">
+            <div><b id="tps">–</b><small>tok/s</small></div>
+            <div><b id="ttft">–</b><small>ms TTFT</small></div>
+            <div><b id="tokens">0</b><small>tokens of monster code</small></div>
+          </div>
+          <div id="bred" class="bred">0 bred · 0 stillborn</div>
+        </header>
+
+        <section class="code-wrap">
+          <div id="code-title" class="section-title">Waiting for the first breeding</div>
+          <pre id="code" class="code"></pre>
+        </section>
+
+        <section>
+          <div class="section-title">Living species</div>
+          <table class="leaderboard">
+            <thead><tr><th>Species</th><th class="num">Gen</th><th class="num">Score</th></tr></thead>
+            <tbody id="leaderboard"></tbody>
+          </table>
+          <ul id="lineage" class="lineage"></ul>
+        </section>
+
+        <form id="mutation-form" class="mutation">
+          <input id="mutation-text" placeholder="Inject a mutation, e.g. give them patience" maxlength="140" />
+          <input id="mutation-handle" placeholder="@handle" maxlength="30" />
+          <button type="submit">Inject</button>
+        </form>
+
+        <footer class="tools">
+          <button id="export" type="button">Export gene pool</button>
+          <label class="import">Import<input id="import" type="file" accept="application/json" hidden /></label>
+          <button id="live-toggle" type="button">Toggle live</button>
+          <button id="autopilot" type="button">Autopilot</button>
+          <button id="thoughts-toggle" type="button">Thoughts</button>
+        </footer>
+      </aside>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

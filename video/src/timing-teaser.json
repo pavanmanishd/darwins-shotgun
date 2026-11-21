@@ -1,0 +1,27 @@
+{
+  "bpm": 150,
+  "bars": 15,
+  "seconds": 24.0,
+  "sections": {
+    "hook": {
+      "from": 0,
+      "to": 2
+    },
+    "riser": {
+      "from": 2,
+      "to": 4
+    },
+    "drop1": {
+      "from": 4,
+      "to": 10
+    },
+    "drop2": {
+      "from": 10,
+      "to": 12
+    },
+    "outro": {
+      "from": 12,
+      "to": 15
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "darwins-shotgun-sim",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "sim": "node run.mjs"
+  },
+  "devDependencies": {
+    "puppeteer-core": "25.16.0"
+  }
+}

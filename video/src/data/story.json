@@ -1,0 +1,637 @@
+{
+  "rehearsal": true,
+  "minutes": 17,
+  "topGen": 9,
+  "speciesCreated": 291,
+  "champion": {
+    "name": "Cinder Wardens",
+    "gen": 8,
+    "note": "waits for backup before pushing",
+    "score": 47.2
+  },
+  "seedBest": 37.3,
+  "seedMean": 17.4,
+  "finalistMean": 44,
+  "championCode": "// NAME: Cinder Wardens | NOTE: waits for backup before pushing\nfunction think(s, mem, squad) {\n  const G = {\"engage\":1027,\"flankAim\":45,\"pincer\":0,\"rushAfterShot\":0,\"retreatHp\":0.04,\"ambush\":0,\"sneaky\":0,\"squad\":1};\n  const side = G.pincer ? (s.uid % 2 ? \"L\" : \"R\") : \"L\";\n  const offScreen = s.aimOffset > 45;\n  if (s.hp < s.maxHp * G.retreatHp && s.hurtAgo < 70) return { move: \"retreat\", attack: s.canShoot };\n  if (G.ambush > 0 && s.aliveTics < G.ambush && offScreen) return { move: \"hold\", attack: false };\n  if (G.rushAfterShot > 0 && s.playerFiredAgo < G.rushAfterShot) return { move: \"flank\" + side, attack: true };\n  if (s.canSee && s.aimOffset < G.flankAim) return { move: \"strafe\" + side, attack: s.canShoot && !G.sneaky };\n  if (s.alliesNear < G.squad && s.dist > 400) return { move: \"hold\", attack: s.canShoot && !G.sneaky };\n  const attack = s.canMelee || (s.canShoot && (!G.sneaky || offScreen));\n  if (s.dist > G.engage) return { move: \"advance\", attack };\n  if (s.dist < G.engage * 0.5) return { move: \"retreat\", attack };\n  return { move: \"flank\" + side, attack };\n}",
+  "lineage": [
+    {
+      "name": "Turret",
+      "gen": 0,
+      "note": "stands still and shoots whenever it sees you"
+    },
+    {
+      "name": "Grave Coven",
+      "gen": 1,
+      "note": "fights from about 1027 units away"
+    },
+    {
+      "name": "Hollow Choir",
+      "gen": 5,
+      "note": "lurks off-screen for 0.9 s first"
+    },
+    {
+      "name": "Crooked Pack",
+      "gen": 6,
+      "note": "never backs off"
+    },
+    {
+      "name": "Cinder Wardens",
+      "gen": 8,
+      "note": "waits for backup before pushing"
+    }
+  ],
+  "tree": {
+    "nodes": [
+      {
+        "id": 260,
+        "name": "Cinder Wardens",
+        "gen": 8,
+        "score": 47.2,
+        "champion": true,
+        "finalist": true
+      },
+      {
+        "id": 285,
+        "name": "Crooked Lurkers",
+        "gen": 6,
+        "score": 3.7,
+        "champion": false,
+        "finalist": true
+      },
+      {
+        "id": 286,
+        "name": "Ash Coven",
+        "gen": 6,
+        "score": 2,
+        "champion": false,
+        "finalist": true
+      },
+      {
+        "id": 287,
+        "name": "Cinder Stalkers",
+        "gen": 6,
+        "score": 26.6,
+        "champion": false,
+        "finalist": true
+      },
+      {
+        "id": 139,
+        "name": "Patient Stalkers",
+        "gen": 5,
+        "score": 82.3,
+        "champion": false,
+        "finalist": true
+      },
+      {
+        "id": 186,
+        "name": "Crooked Pack",
+        "gen": 6,
+        "score": 61.9,
+        "champion": false,
+        "finalist": true
+      },
+      {
+        "id": 121,
+        "name": "Silent Brood",
+        "gen": 5,
+        "score": 60.9,
+        "champion": false,
+        "finalist": true
+      },
+      {
+        "id": 242,
+        "name": "Pillar Stalkers",
+        "gen": 7,
+        "score": 52.4,
+        "champion": false,
+        "finalist": true
+      },
+      {
+        "id": 171,
+        "name": "Hollow Choir",
+        "gen": 5,
+        "score": 51,
+        "champion": false,
+        "finalist": true
+      },
+      {
+        "id": 193,
+        "name": "Grave Choir",
+        "gen": 5,
+        "score": 47.1,
+        "champion": false,
+        "finalist": true
+      },
+      {
+        "id": 45,
+        "name": "Patient Widows",
+        "gen": 4,
+        "score": 47.1,
+        "champion": false,
+        "finalist": true
+      },
+      {
+        "id": 107,
+        "name": "Crooked Jackals",
+        "gen": 4,
+        "score": 46.2,
+        "champion": false,
+        "finalist": true
+      },
+      {
+        "id": 41,
+        "name": "Grave Flankers",
+        "gen": 3,
+        "score": 43.4,
+        "champion": false,
+        "finalist": true
+      },
+      {
+        "id": 2,
+        "name": "Turret",
+        "gen": 0,
+        "score": 37.3,
+        "champion": false,
+        "finalist": false
+      },
+      {
+        "id": 26,
+        "name": "Ash Saints",
+        "gen": 2,
+        "score": 41.1,
+        "champion": false,
+        "finalist": false
+      },
+      {
+        "id": 8,
+        "name": "Grave Coven",
+        "gen": 1,
+        "score": 39.9,
+        "champion": false,
+        "finalist": false
+      },
+      {
+        "id": 22,
+        "name": "Crooked Pack",
+        "gen": 3,
+        "score": 35.6,
+        "champion": false,
+        "finalist": false
+      },
+      {
+        "id": 9,
+        "name": "Silent Wardens",
+        "gen": 2,
+        "score": 24.6,
+        "champion": false,
+        "finalist": false
+      },
+      {
+        "id": 4,
+        "name": "Coward",
+        "gen": 0,
+        "score": 15.3,
+        "champion": false,
+        "finalist": false
+      },
+      {
+        "id": 7,
+        "name": "Grave Widows",
+        "gen": 1,
+        "score": 13.1,
+        "champion": false,
+        "finalist": false
+      },
+      {
+        "id": 3,
+        "name": "Drunk",
+        "gen": 0,
+        "score": 5,
+        "champion": false,
+        "finalist": false
+      },
+      {
+        "id": 5,
+        "name": "Patient Widows",
+        "gen": 1,
+        "score": 0.6,
+        "champion": false,
+        "finalist": false
+      },
+      {
+        "id": 1,
+        "name": "Charger",
+        "gen": 0,
+        "score": 12,
+        "champion": false,
+        "finalist": false
+      }
+    ],
+    "edges": [
+      [
+        186,
+        260
+      ],
+      [
+        242,
+        260
+      ],
+      [
+        139,
+        285
+      ],
+      [
+        107,
+        285
+      ],
+      [
+        121,
+        286
+      ],
+      [
+        107,
+        286
+      ],
+      [
+        139,
+        287
+      ],
+      [
+        121,
+        287
+      ],
+      [
+        45,
+        139
+      ],
+      [
+        107,
+        139
+      ],
+      [
+        171,
+        186
+      ],
+      [
+        2,
+        186
+      ],
+      [
+        107,
+        121
+      ],
+      [
+        2,
+        121
+      ],
+      [
+        26,
+        242
+      ],
+      [
+        186,
+        242
+      ],
+      [
+        8,
+        171
+      ],
+      [
+        107,
+        171
+      ],
+      [
+        45,
+        193
+      ],
+      [
+        107,
+        193
+      ],
+      [
+        22,
+        45
+      ],
+      [
+        26,
+        45
+      ],
+      [
+        2,
+        107
+      ],
+      [
+        41,
+        107
+      ],
+      [
+        9,
+        41
+      ],
+      [
+        8,
+        41
+      ],
+      [
+        4,
+        26
+      ],
+      [
+        7,
+        26
+      ],
+      [
+        2,
+        8
+      ],
+      [
+        3,
+        8
+      ],
+      [
+        9,
+        22
+      ],
+      [
+        7,
+        22
+      ],
+      [
+        2,
+        9
+      ],
+      [
+        5,
+        9
+      ],
+      [
+        1,
+        7
+      ],
+      [
+        3,
+        7
+      ],
+      [
+        3,
+        5
+      ],
+      [
+        1,
+        5
+      ]
+    ]
+  },
+  "montage": [
+    {
+      "name": "Grave Coven",
+      "gen": 1,
+      "note": "sidesteps whenever you aim at it",
+      "score": 38.2
+    },
+    {
+      "name": "Ash Saints",
+      "gen": 2,
+      "note": "rushes in right after you fire",
+      "score": 41.1
+    },
+    {
+      "name": "Pack Hunters",
+      "gen": 3,
+      "note": "one imp draws your aim while the rest flank",
+      "score": 36.2
+    },
+    {
+      "name": "Patient Widows",
+      "gen": 4,
+      "note": "fights from about 1400 units away",
+      "score": 47.1
+    },
+    {
+      "name": "Patient Stalkers",
+      "gen": 5,
+      "note": "lurks off-screen for 1.7 s first",
+      "score": 82.3
+    },
+    {
+      "name": "Silent Brood",
+      "gen": 5,
+      "note": "waits for backup before pushing",
+      "score": 60.9
+    },
+    {
+      "name": "Crooked Pack",
+      "gen": 6,
+      "note": "never backs off",
+      "score": 61.9
+    },
+    {
+      "name": "Pillar Flankers",
+      "gen": 7,
+      "note": "only fires when you can't see it",
+      "score": 28.1
+    }
+  ],
+  "diff": {
+    "parent": {
+      "name": "Crooked Pack",
+      "gen": 6,
+      "genes": {
+        "engage": 1027,
+        "flankAim": 45,
+        "pincer": 0,
+        "rushAfterShot": 0,
+        "retreatHp": 0.04,
+        "ambush": 0,
+        "sneaky": 0,
+        "squad": 0
+      }
+    },
+    "child": {
+      "name": "Cinder Wardens",
+      "gen": 8,
+      "genes": {
+        "engage": 1027,
+        "flankAim": 45,
+        "pincer": 0,
+        "rushAfterShot": 0,
+        "retreatHp": 0.04,
+        "ambush": 0,
+        "sneaky": 0,
+        "squad": 1
+      },
+      "note": "waits for backup before pushing"
+    },
+    "changed": [
+      "squad"
+    ]
+  },
+  "profile": [
+    "Favourite weapon: shotgun.",
+    "Usually kills imps at about 285 map units (4.5 wall tiles).",
+    "67% of their kills are on imps near the crosshair.",
+    "Fires about every 1.6 s (57 tics).",
+    "Damage the player has taken by direction: front 37, side 75, behind 0."
+  ],
+  "speed": {
+    "fast": 2000,
+    "slow": 50,
+    "fastTtftMs": 200,
+    "slowTtftMs": 800,
+    "brainTokens": 283,
+    "brainSeconds": 0.34
+  },
+  "bench": {
+    "seeds": {
+      "name": "seeds",
+      "pool": "seeds",
+      "minutesPerRun": 4,
+      "runs": 3,
+      "meanLifeSeconds": 17.3,
+      "lifeSpreadSeconds": 9.5,
+      "completedLives": 32,
+      "damageTakenPerMin": 368,
+      "damageTakenSpread": 73.4,
+      "impKillsPerMin": 36.87,
+      "flankShare": 0.501,
+      "perRun": [
+        {
+          "gameMinutes": 3.09,
+          "playerDeaths": 13,
+          "damageTakenPerMin": 469.4,
+          "impKillsPerMin": 36.21,
+          "flankShare": 0.469,
+          "lifeSeconds": [
+            6.2,
+            32.9,
+            7.4,
+            17.7,
+            12.7,
+            6.7,
+            18.8,
+            30.8,
+            6.1,
+            8.3,
+            6.5,
+            15.7,
+            10.9
+          ]
+        },
+        {
+          "gameMinutes": 3.35,
+          "playerDeaths": 9,
+          "damageTakenPerMin": 298,
+          "impKillsPerMin": 37.67,
+          "flankShare": 0.588,
+          "lifeSeconds": [
+            24.8,
+            5.8,
+            14.1,
+            33.7,
+            27.4,
+            20.9,
+            29.6,
+            6.2,
+            10.4
+          ]
+        },
+        {
+          "gameMinutes": 3.32,
+          "playerDeaths": 10,
+          "damageTakenPerMin": 336.5,
+          "impKillsPerMin": 36.72,
+          "flankShare": 0.447,
+          "lifeSeconds": [
+            25.1,
+            17.5,
+            22.7,
+            34.9,
+            9.1,
+            18.2,
+            20.1,
+            32.7,
+            13.1,
+            6
+          ]
+        }
+      ]
+    },
+    "evolved": {
+      "name": "evolved",
+      "pool": "results/evolved-20.json",
+      "minutesPerRun": 4,
+      "runs": 3,
+      "meanLifeSeconds": 16.2,
+      "lifeSpreadSeconds": 10.5,
+      "completedLives": 35,
+      "damageTakenPerMin": 403.8,
+      "damageTakenSpread": 37.9,
+      "impKillsPerMin": 31.65,
+      "flankShare": 0.533,
+      "perRun": [
+        {
+          "gameMinutes": 3.17,
+          "playerDeaths": 12,
+          "damageTakenPerMin": 437.1,
+          "impKillsPerMin": 30.95,
+          "flankShare": 0.467,
+          "lifeSeconds": [
+            43.6,
+            21.3,
+            6.9,
+            5.9,
+            9.6,
+            9.4,
+            16.4,
+            17.9,
+            19.3,
+            10.8,
+            13.7,
+            10.4
+          ]
+        },
+        {
+          "gameMinutes": 3.24,
+          "playerDeaths": 11,
+          "damageTakenPerMin": 350.8,
+          "impKillsPerMin": 32.11,
+          "flankShare": 0.541,
+          "lifeSeconds": [
+            23.8,
+            48.4,
+            10.1,
+            11.7,
+            4.7,
+            19.5,
+            5.2,
+            19,
+            15,
+            18.8,
+            12.1
+          ]
+        },
+        {
+          "gameMinutes": 3.2,
+          "playerDeaths": 12,
+          "damageTakenPerMin": 423.4,
+          "impKillsPerMin": 31.9,
+          "flankShare": 0.59,
+          "lifeSeconds": [
+            28.7,
+            6.7,
+            13.4,
+            12.7,
+            2.9,
+            6.5,
+            38.3,
+            25.3,
+            19.1,
+            10.4,
+            7.9,
+            20
+          ]
+        }
+      ]
+    }
+  }
+}
