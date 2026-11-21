@@ -1,49 +1,90 @@
 # Darwin's Shotgun
 
-DOOM's monsters, rewritten by an LLM while you fight them.
+Real DOOM, where the imps' brains are JavaScript written and evolved by Kimi K3.1 Pro on Cerebras, through OpenClaw.
 
-Every imp runs a JavaScript brain. When a species dies out, Kimi K3.1 Pro on Cerebras breeds a replacement from the two fittest species and a profile of how you play. The new code streams onto the screen and the child teleports in seconds later, while the game keeps running at full frame rate. Generation 0 walks into your shotgun. A few dozen generations later they wait off-screen and hit you from the side.
+Every imp runs a small `think()` function. When a species has fought, Kimi breeds a child from two fit parents and a profile of how the player fights: where they shoot from, how fast they fire, which side they get hit from. The new brain is installed while the game keeps running. Players then fight the evolved imps in the browser and try to survive as long as they can.
 
-Built on the open-source DOOM engine via [doomgeneric](https://github.com/ozkl/doomgeneric), compiled to WebAssembly.
+Built for the Kimi K3.1 Pro × Cerebras × OpenClaw hackathon. #KimiOnCerebras
 
 ## How it works
 
-- **Brains decide, the engine acts.** Each time an imp would run its chase logic, the engine passes a sensor snapshot (distance, whether it's in your crosshair, whether it can shoot, when you last fired, nearby allies) to that species' `think(s, mem, squad)` function. It returns a move (advance, retreat, strafe, flank, hold) and whether to attack. Movement speed and damage stay vanilla, and an imp can attack at most once per second. They get smarter, not stronger.
-- **Untrusted code runs sandboxed.** Each species runs in its own QuickJS VM with a 1 MB memory cap and a 1 ms deadline per call. New code must pass 300 randomized calls before it's installed. Broken children get one repair attempt; after that they're stillborn.
-- **Fitness rewards what reads well on camera.** Damage to you counts, damage from outside your view counts double, kills count 25, and survival time counts up to 60 seconds so hiding doesn't pay.
-- **Steady-state evolution.** Four species of three imps are alive at once. Four children are always bred ahead, so even when your death clears every species at once, the replacements are already waiting. The best retired species stay in a hall of fame and keep breeding.
+- **The engine is real DOOM.** [doomgeneric](https://github.com/ozkl/doomgeneric) compiled to WebAssembly, running the shareware episode 1.
+- **Brains decide, the engine acts.** Whenever an imp would run its chase logic, the engine passes a sensor snapshot (distance, whether it's in your crosshair, whether it can shoot, when you last fired, nearby allies) to its species' `think(s, mem, squad)`. The brain returns a move (advance, retreat, strafe, flank, hold) and whether to attack. Speed and damage stay vanilla, so imps get smarter, not stronger.
+- **Untrusted code runs sandboxed.** Each species runs in its own QuickJS VM with a 1 MB memory cap and a short deadline per call. New code must pass randomized test calls before it's installed. A broken child gets one repair attempt.
+- **Breeding goes through OpenClaw.** The game sends each breeding request to an OpenClaw gateway's OpenAI-compatible `/v1/chat/completions` endpoint. OpenClaw runs the request as an agent turn on Kimi K3.1 Pro on Cerebras and streams the brain back.
+- **Fitness rewards what a player feels.** Damage to the player counts, damage from outside the player's view counts double, kills count 25, and survival time counts up to 60 seconds. A species judged on only a few imps is pulled toward the population average, and champions come back for re-tests, so one lucky fight doesn't crown a species.
+- **Steady-state evolution.** Four species of three imps are alive at once, and up to eight children are bred ahead. The best retired species stay in a hall of fame and keep breeding.
+
+## Play
+
+The public site needs no API key. Pick an opponent:
+
+- **Gen 0:** four brains written by hand, with fixed rules.
+- **Evolved:** the champions of a local evolution run, bred by Kimi.
+
+When you die, the game shows how long you lasted and offers a share button. Each panel shows the brain code of the species you're fighting.
 
 ## Run it locally
 
-Requirements: Emscripten (`brew install emscripten`), Node 22+, pnpm.
+Requirements: Emscripten (`brew install emscripten`), Node 22+, pnpm, and [OpenClaw](https://github.com/openclaw/openclaw).
 
 ```sh
-scripts/build.sh                 # fetches the shareware WAD, builds the engine and the web app
-cp web/.env.example web/.env     # add CEREBRAS_API_KEY and CEREBRAS_MODEL
+scripts/build.sh                     # fetches the shareware WAD, builds the engine and the web app
+```
+
+Start an OpenClaw gateway with the chat completions endpoint turned on. `openclaw/openclaw.example.json` is the config used for this project. It runs Kimi K3.1 Pro on Cerebras with thinking off, no tools, and timeouts long enough for a busy queue.
+
+```sh
+mkdir -p ~/.openclaw-darwin
+cp openclaw/openclaw.example.json ~/.openclaw-darwin/openclaw.json
+export CEREBRAS_API_KEY=...          # your Cerebras key
+export OPENCLAW_GATEWAY_TOKEN=...    # any long random string
+openclaw --profile darwin gateway
+```
+
+Point the game at the gateway and start it:
+
+```sh
+cp web/.env.example web/.env         # set CEREBRAS_API_KEY to the gateway token
 cd web && pnpm dev
 ```
 
-Open the printed URL. Live evolution is on in dev. Add `?champions` to play against the saved gene pool without API calls.
+Live evolution is on in dev. Other modes:
+
+- `?vs=gen0` or `?vs=evolved` plays the challenge mode against a saved gene pool, with no API calls.
+- `?thoughts` shows each imp's current decision above its head.
+- `?autopilot` lets a bot play, which is how the simulations run.
 
 Controls: WASD move, arrow keys turn, Ctrl fire, Space use.
 
-## Deploy
+## Evolution runs and benchmarks
 
-The Worker in `proxy/` serves the built site and `/api/breed`. It holds the API key, fixes the model and system prompt server-side, caps prompt and output size, and rate-limits per IP.
+`sim/` drives the game headless with puppeteer.
 
 ```sh
-scripts/build.sh
-cd proxy && pnpm install
-pnpm exec wrangler secret put CEREBRAS_API_KEY
-pnpm exec wrangler deploy --var CEREBRAS_MODEL:<model id>
+cd sim && pnpm install
+MINUTES=40 node run.mjs kimi-openclaw            # real evolution through the OpenClaw gateway
+node bench.mjs seeds                             # bot vs gen 0
+node bench.mjs evolved results/kimi-openclaw.json  # bot vs the evolved champions
 ```
 
-The public site opens in champions mode (`web/public/champions.json`, exported from a play session with "Export gene pool"). Add `?live` for live evolution.
+`run.mjs` also has mock configs that stream fake brains at fixed speeds, used to compare how evolution behaves at different token rates.
+
+## Trailer
+
+`video/` is a [Remotion](https://www.remotion.dev) project that builds the trailer from captured gameplay and the data of an evolution run. The music is original and generated by `video/music/make_track.py`.
+
+```sh
+cd sim && POOL_FROM=results/kimi-openclaw.json node capture.mjs
+cd ../video && pnpm install && pnpm music
+POOL_FROM=../sim/results/kimi-openclaw.json node scripts/build-data.mjs
+pnpm render full-evolve-phonk teaser-evolve-darksynth
+```
 
 ## Credits and licenses
 
 - Engine: [doomgeneric](https://github.com/ozkl/doomgeneric), based on Chocolate Doom and id Software's 1997 source release. GPL-2.0.
-- Game data: the DOOM shareware WAD (episode 1) by id Software. Not included in this repository; `scripts/fetch-wad.sh` downloads the unmodified v1.9 file and verifies its checksum.
+- Game data: the DOOM shareware WAD (episode 1) by id Software. It isn't in this repository; `scripts/fetch-wad.sh` downloads the unmodified v1.9 file and verifies its checksum.
 - Everything in this repository is GPL-2.0. See `LICENSE`.
 
 DOOM is a trademark of id Software. This project is not affiliated with or endorsed by id Software, Bethesda or Microsoft.

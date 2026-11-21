@@ -7,6 +7,8 @@ const VIDEO = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SIM = join(VIDEO, "..", "sim", "results");
 const DATA = join(VIDEO, "src", "data");
 const POOL_FROM = process.env.POOL_FROM ?? join(SIM, "cerebras-2000.json");
+const FAST_TPS = Number(process.env.FAST_TPS ?? 2000);
+const FAST_TTFT_MS = Number(process.env.FAST_TTFT_MS ?? 200);
 const MAX_TREE = 48;
 const MONTAGE = 8;
 
@@ -106,7 +108,7 @@ const story = {
   montage,
   diff,
   profile,
-  speed: { fast: 2000, slow: 50, fastTtftMs: 200, slowTtftMs: 800, brainTokens, brainSeconds: +(0.2 + brainTokens / 2000).toFixed(2) },
+  speed: { fast: FAST_TPS, slow: 50, fastTtftMs: FAST_TTFT_MS, slowTtftMs: 800, brainTokens, brainSeconds: +(brainTokens / FAST_TPS).toFixed(2) },
   bench: bench.seeds && bench.evolved ? bench : null,
 };
 await writeFile(join(DATA, "story.json"), JSON.stringify(story, null, 2));

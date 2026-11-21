@@ -18,7 +18,7 @@ const CodeWriting: React.FC = () => {
           <Footage clip="live-fast" part="code" from={3} box={{ w: 860, h: 870 }} fit="cover" />
         </div>
         <div style={{ position: "absolute", left: 0, top: -54 }}>
-          <Chip color={COLORS.code}>● live · Kimi writing a new imp brain</Chip>
+          <Chip color={COLORS.code}>Kimi writing a new imp brain · at measured speed</Chip>
         </div>
       </div>
       <div style={{ position: "absolute", left: 1060, top: 150, display: "flex", flexDirection: "column", gap: 34 }}>

@@ -74,8 +74,8 @@ export const Race: React.FC = () => {
         </Slam>
       </div>
       <div style={{ position: "absolute", inset: 0, ...shake(frame, interpolate(frame, [0, BAR * 4], [1, 8])) }}>
-        <Side clip="live-fast" label="KIMI ON CEREBRAS" tps={story.speed.fast} hot left={40} />
-        <Side clip="live-slow" label="TYPICAL GPU SPEED" tps={story.speed.slow} hot={false} left={980} />
+        <Side clip="live-fast" label="KIMI ON CEREBRAS · MEASURED" tps={story.speed.fast} hot left={40} />
+        <Side clip="live-slow" label="TYPICAL GPU SPEED · SIMULATED" tps={story.speed.slow} hot={false} left={980} />
       </div>
       <div style={{ position: "absolute", top: 160, width: "100%", display: "flex", justifyContent: "center" }}>
         <Chip color={COLORS.ash}>{RATE}× speed · both start at gen 0</Chip>

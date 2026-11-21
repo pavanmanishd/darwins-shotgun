@@ -13,7 +13,7 @@ const POOL_FROM = process.env.POOL_FROM ?? join(RESULTS, "cerebras-2000.json");
 const FPS = 30;
 const ENCODER = process.env.ENCODER ?? "h264_videotoolbox";
 
-const FAST = { tps: 2000, ttftMs: 200 };
+const FAST = { tps: Number(process.env.FAST_TPS ?? 2000), ttftMs: Number(process.env.FAST_TTFT_MS ?? 200) };
 const SLOW = { tps: 50, ttftMs: 800 };
 const NONE = { tps: 0, ttftMs: 0 };
 const FILM = "?champions&autopilot&film&thoughts";
