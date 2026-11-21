@@ -3,7 +3,7 @@ import { Footage } from "../Footage";
 import { COLORS, Flash, FlashAt, RgbSplit, glitchAmount, shake } from "../fx";
 import { story } from "../story";
 import { BAR, BEAT } from "../timing";
-import { Chip, DISPLAY, MONO, Rise, Slam, countUp, fmt } from "../type";
+import { Chip, DISPLAY, MONO, Rise, Slam, Typewriter, countUp, fmt } from "../type";
 import { FamilyTree } from "./Tree";
 
 const CODE_BARS = 2;
@@ -15,10 +15,12 @@ const CodeWriting: React.FC = () => {
     <AbsoluteFill style={{ background: COLORS.ink }}>
       <div style={{ position: "absolute", left: 90, top: 120, width: 860, height: 870, ...shake(frame, 6, BAR) }}>
         <div style={{ position: "absolute", inset: 0, boxShadow: `0 0 0 2px ${COLORS.code}55, 0 0 80px ${COLORS.code}33`, overflow: "hidden" }}>
-          <Footage clip="live-fast" part="code" from={3} box={{ w: 860, h: 870 }} fit="cover" />
+          <div style={{ position: "absolute", inset: 0, padding: "28px 30px", background: "#0b0d0b", overflow: "hidden" }}>
+            <Typewriter text={story.championCode} at={8} cps={story.speed.fast * 3.6} style={{ fontSize: 19, lineHeight: 1.45, color: COLORS.code }} />
+          </div>
         </div>
         <div style={{ position: "absolute", left: 0, top: -54 }}>
-          <Chip color={COLORS.code}>Kimi writing a new imp brain · at measured speed</Chip>
+          <Chip color={COLORS.code}>a brain Kimi wrote · replayed at measured speed</Chip>
         </div>
       </div>
       <div style={{ position: "absolute", left: 1060, top: 150, display: "flex", flexDirection: "column", gap: 34 }}>

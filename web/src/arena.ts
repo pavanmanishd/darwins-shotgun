@@ -21,7 +21,9 @@ async function fetchPool(path: string): Promise<GenePoolData | null> {
 }
 
 function topGen(data: GenePoolData | null): number {
-  return data ? Math.max(0, ...data.species.map((s) => s.gen)) : 0;
+  if (!data) return 0;
+  const champions = new Set([...data.hallOfFame, ...data.living]);
+  return Math.max(0, ...data.species.filter((s) => champions.has(s.id)).map((s) => s.gen));
 }
 
 export async function chooseArena(params: URLSearchParams): Promise<Arena> {

@@ -84,6 +84,7 @@ export const Race: React.FC = () => {
         <Rise at={BAR * 2} style={{ fontFamily: MONO, fontSize: 40, color: COLORS.bone }}>
           At {story.speed.slow} tok/s the monsters stand around <span style={{ color: COLORS.fire }}>waiting for their brains</span>.
         </Rise>
+        <div style={{ fontFamily: MONO, fontSize: 20, color: COLORS.ash, marginTop: 10 }}>both sides replay breeding with a stand-in model at these speeds</div>
       </div>
     </AbsoluteFill>
   );
