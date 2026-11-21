@@ -1,99 +1,60 @@
 # Darwin's Shotgun
 
-Real DOOM, where the imps' brains are JavaScript written and evolved by Kimi K3.1 Pro on Cerebras, through OpenClaw.
+Real DOOM in the browser, where Kimi K3.1 Pro on Cerebras evolves the imps' brains.
 
-Every imp runs a small `think()` function. When a species has fought, Kimi breeds a child from two fit parents and a profile of how the player fights: where they shoot from, how fast they fire, which side they get hit from. The new brain is installed while the game keeps running. Players then fight the evolved imps in the browser and try to survive as long as they can.
+**Play:** https://darwins-shotgun.pavanmanishd.workers.dev
+
+Every imp runs a small JavaScript function that decides how it moves and when it attacks. Kimi breeds new functions from the fittest species and from how the player fights, through [OpenClaw](https://github.com/openclaw/openclaw). On the site you fight either the hand-written Gen 0 or the evolved champions, and see how long you last.
 
 Built for the Kimi K3.1 Pro × Cerebras × OpenClaw hackathon. #KimiOnCerebras
 
 ## How it works
 
-- **The engine is real DOOM.** [doomgeneric](https://github.com/ozkl/doomgeneric) compiled to WebAssembly, running the shareware episode 1.
-- **Brains decide, the engine acts.** Whenever an imp would run its chase logic, the engine passes a sensor snapshot (distance, whether it's in your crosshair, whether it can shoot, when you last fired, nearby allies) to its species' `think(s, mem, squad)`. The brain returns a move (advance, retreat, strafe, flank, hold) and whether to attack. Speed and damage stay vanilla, so imps get smarter, not stronger.
-- **Untrusted code runs sandboxed.** Each species runs in its own QuickJS VM with a 1 MB memory cap and a short deadline per call. New code must pass randomized test calls before it's installed. A broken child gets one repair attempt.
-- **Breeding goes through OpenClaw.** The game sends each breeding request to an OpenClaw gateway's OpenAI-compatible `/v1/chat/completions` endpoint. OpenClaw runs the request as an agent turn on Kimi K3.1 Pro on Cerebras and streams the brain back.
-- **Fitness rewards what a player feels.** Damage to the player counts, damage from outside the player's view counts double, kills count 25, and survival time counts up to 60 seconds. A species judged on only a few imps is pulled toward the population average, and champions come back for re-tests, so one lucky fight doesn't crown a species.
-- **Steady-state evolution.** Four species of three imps are alive at once, and up to eight children are bred ahead. The best retired species stay in a hall of fame and keep breeding.
+1. **Engine.** [doomgeneric](https://github.com/ozkl/doomgeneric) compiled to WebAssembly, running shareware episode 1.
+2. **Brains.** About 12 times a second, each imp's species gets a sensor snapshot: distance, whether it's in your crosshair, when you last fired, nearby allies. Its `think(s, mem, squad)` returns a move and whether to attack. Speed and damage stay vanilla.
+3. **Sandbox.** Each species runs in its own QuickJS VM with a memory cap and a per-call deadline. New code must pass randomized test calls before it enters the level.
+4. **Fitness.** Damage to the player, double for hits from outside their view, plus kills and survival time. Scores from only a few imps are pulled toward the average, and champions are re-tested.
+5. **Breeding.** Two parents' code and stats plus a profile of the player go to an OpenClaw gateway, which runs Kimi K3.1 Pro on Cerebras and returns the child.
 
-## Play
+## Run locally
 
-The public site needs no API key. Pick an opponent:
-
-- **Gen 0:** four brains written by hand, with fixed rules.
-- **Evolved:** the champions of a local evolution run, bred by Kimi.
-
-When you die, the game shows how long you lasted and offers a share button. Each panel shows the brain code of the species you're fighting.
-
-## Run it locally
-
-Requirements: Emscripten (`brew install emscripten`), Node 22+, pnpm, and [OpenClaw](https://github.com/openclaw/openclaw).
+Requirements: Emscripten, Node 22+, pnpm, OpenClaw.
 
 ```sh
-scripts/build.sh                     # fetches the shareware WAD, builds the engine and the web app
-```
+scripts/build.sh                                   # fetch the shareware WAD, build engine and web app
 
-Start an OpenClaw gateway with the chat completions endpoint turned on. `openclaw/openclaw.example.json` is the config used for this project. It runs Kimi K3.1 Pro on Cerebras with thinking off, no tools, and timeouts long enough for a busy queue.
-
-```sh
 mkdir -p ~/.openclaw-darwin
 cp openclaw/openclaw.example.json ~/.openclaw-darwin/openclaw.json
-export CEREBRAS_API_KEY=...          # your Cerebras key
-export OPENCLAW_GATEWAY_TOKEN=...    # any long random string
-openclaw --profile darwin gateway
+export CEREBRAS_API_KEY=... OPENCLAW_GATEWAY_TOKEN=...
+openclaw --profile darwin gateway                  # Kimi K3.1 Pro on Cerebras, chat completions on :18810
+
+cp web/.env.example web/.env                       # CEREBRAS_API_KEY = the gateway token
+cd web && pnpm dev                                 # live evolution
 ```
 
-Point the game at the gateway and start it:
+URL options: `?vs=gen0` or `?vs=evolved` (challenge mode, no API calls), `?thoughts` (show each imp's decision), `?autopilot` (a bot plays).
+
+Controls: WASD move, arrows turn, Ctrl fire, Space use.
+
+## Repository
+
+| Path | What |
+| --- | --- |
+| `engine/` | doomgeneric with the brain bridge (C → JS hooks for sensors, decisions, events) |
+| `web/` | Game, sandbox, evolution director, breeding client, challenge mode |
+| `openclaw/` | OpenClaw gateway config used for breeding |
+| `sim/` | Headless runs: evolution (`run.mjs`), benchmarks (`bench.mjs`), clip capture, pool export |
+| `video/` | Remotion trailer and the generator for its original music |
+| `site/` | Static deploy of the public site (Cloudflare) |
 
 ```sh
-cp web/.env.example web/.env         # set CEREBRAS_API_KEY to the gateway token
-cd web && pnpm dev
+cd sim && MINUTES=40 node run.mjs kimi-openclaw    # real evolution through the gateway
+node export-pool.mjs results/kimi-openclaw.json ../web/public/pools/evolved.json
+cd ../site && pnpm deploy                          # after scripts/build.sh
 ```
 
-Live evolution is on in dev. Other modes:
+## License
 
-- `?vs=gen0` or `?vs=evolved` plays the challenge mode against a saved gene pool, with no API calls.
-- `?thoughts` shows each imp's current decision above its head.
-- `?autopilot` lets a bot play, which is how the simulations run.
+GPL-2.0, see `LICENSE`. Engine based on Chocolate Doom and id Software's 1997 source release. The shareware WAD isn't included; `scripts/fetch-wad.sh` downloads the unmodified v1.9 file and checks its hash.
 
-Controls: WASD move, arrow keys turn, Ctrl fire, Space use.
-
-## Deploy the public site
-
-The public site is static: the engine, the game and the saved gene pools in `web/public/pools/`. It makes no API calls.
-
-```sh
-scripts/build.sh
-cd site && pnpm install && pnpm deploy   # Cloudflare Workers static assets
-```
-
-## Evolution runs and benchmarks
-
-`sim/` drives the game headless with puppeteer.
-
-```sh
-cd sim && pnpm install
-MINUTES=40 node run.mjs kimi-openclaw            # real evolution through the OpenClaw gateway
-node bench.mjs seeds                             # bot vs gen 0
-node bench.mjs evolved results/kimi-openclaw.json  # bot vs the evolved champions
-```
-
-`run.mjs` also has mock configs that stream fake brains at fixed speeds, used to compare how evolution behaves at different token rates.
-
-## Trailer
-
-`video/` is a [Remotion](https://www.remotion.dev) project that builds the trailer from captured gameplay and the data of an evolution run. The music is original and generated by `video/music/make_track.py`.
-
-```sh
-cd sim && POOL_FROM=results/kimi-openclaw.json node capture.mjs
-cd ../video && pnpm install && pnpm music
-POOL_FROM=../sim/results/kimi-openclaw.json node scripts/build-data.mjs
-pnpm render full-evolve-phonk teaser-evolve-darksynth
-```
-
-## Credits and licenses
-
-- Engine: [doomgeneric](https://github.com/ozkl/doomgeneric), based on Chocolate Doom and id Software's 1997 source release. GPL-2.0.
-- Game data: the DOOM shareware WAD (episode 1) by id Software. It isn't in this repository; `scripts/fetch-wad.sh` downloads the unmodified v1.9 file and verifies its checksum.
-- Everything in this repository is GPL-2.0. See `LICENSE`.
-
-DOOM is a trademark of id Software. This project is not affiliated with or endorsed by id Software, Bethesda or Microsoft.
+DOOM is a trademark of id Software. This project is not affiliated with id Software, Bethesda or Microsoft.
