@@ -25,6 +25,11 @@ export interface Story {
     child: { name: string; gen: number; genes: Record<string, number>; note: string };
     changed: string[];
   } | null;
+  codeDiff: {
+    parent: { name: string; gen: number };
+    child: { name: string; gen: number; note: string };
+    lines: { text: string; added: boolean }[];
+  } | null;
   profile: string[];
   speed: { fast: number; slow: number; fastTtftMs: number; slowTtftMs: number; brainTokens: number; brainSeconds: number };
   bench: { seeds: BenchSummary; evolved: BenchSummary } | null;

@@ -10,7 +10,7 @@ const CODE_BARS = 2;
 
 const CodeWriting: React.FC = () => {
   const frame = useCurrentFrame();
-  const tps = countUp(frame, 0, BEAT * 3, story.speed.fast, 900);
+  const tps = countUp(frame, 0, BEAT * 3, story.speed.fast);
   return (
     <AbsoluteFill style={{ background: COLORS.ink }}>
       <div style={{ position: "absolute", left: 90, top: 120, width: 860, height: 870, ...shake(frame, 6, BAR) }}>

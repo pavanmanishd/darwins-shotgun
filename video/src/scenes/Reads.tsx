@@ -40,10 +40,45 @@ const Profile: React.FC = () => {
   );
 };
 
+const CodeRewrite: React.FC = () => {
+  const frame = useCurrentFrame();
+  const d = story.codeDiff;
+  if (!d) return null;
+  const flash = 0.55 + 0.45 * Math.sin(frame / 3);
+  return (
+    <AbsoluteFill style={{ padding: "80px 120px", gap: 24 }}>
+      <Slam at={0} size={100}>
+        …and <span style={{ color: COLORS.fire }}>rewrites their brains</span>
+      </Slam>
+      <Rise at={BEAT}>
+        <div style={{ display: "flex", gap: 22, alignItems: "center", fontFamily: MONO, fontSize: 30, color: COLORS.bone }}>
+          <Chip color={COLORS.ash}>parent · gen {d.parent.gen}</Chip>
+          <span>{d.parent.name}</span>
+          <span style={{ color: COLORS.fire, fontSize: 44 }}>→</span>
+          <Chip>child · gen {d.child.gen}</Chip>
+          <span style={{ color: COLORS.fire }}>{d.child.name}</span>
+        </div>
+      </Rise>
+      <Rise at={BEAT * 2}>
+        <Terminal title="brain.js · new lines from Kimi" width={1680}>
+          <div style={{ fontFamily: MONO, fontSize: 21, lineHeight: 1.4, whiteSpace: "pre", overflow: "hidden" }}>
+            {d.lines.map((l, i) => (
+              <div key={i} style={{ color: l.added ? COLORS.code : COLORS.ash, background: l.added ? `rgba(120,220,120,${0.12 * flash})` : "transparent" }}>
+                {l.added ? "+ " : "  "}
+                {l.text.length > 120 ? `${l.text.slice(0, 117)}…` : l.text}
+              </div>
+            ))}
+          </div>
+        </Terminal>
+      </Rise>
+    </AbsoluteFill>
+  );
+};
+
 const Rewrite: React.FC = () => {
   const frame = useCurrentFrame();
   const diff = story.diff;
-  if (!diff) return null;
+  if (!diff) return <CodeRewrite />;
   const keys = Object.keys(diff.child.genes);
   const flash = 0.55 + 0.45 * Math.sin(frame / 3);
   return (

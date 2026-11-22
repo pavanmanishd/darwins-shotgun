@@ -64,6 +64,23 @@ for (const s of candidates) {
 }
 montage.sort((a, b) => a.gen - b.gen);
 
+const MAX_DIFF_LINES = 16;
+let codeDiff = null;
+for (const child of [champion, ...finalists, ...pool.species.filter((s) => s.gen >= 2)]) {
+  const parent = byId.get(child.parents[0]);
+  if (!parent) continue;
+  const before = new Set(parent.code.split("\n").map((l) => l.trim()));
+  const lines = child.code
+    .split("\n")
+    .filter((l) => l.trim())
+    .slice(0, MAX_DIFF_LINES)
+    .map((text) => ({ text, added: !before.has(text.trim()) }));
+  const added = lines.filter((l) => l.added).length;
+  if (added > (codeDiff?.added ?? 0)) {
+    codeDiff = { parent: { name: parent.name, gen: parent.gen }, child: { name: child.name, gen: child.gen, note: child.note }, lines, added };
+  }
+}
+
 let diff = null;
 for (const child of [champion, ...finalists, ...pool.species.slice().reverse()]) {
   const parent = byId.get(child.parents[0]);
@@ -107,6 +124,7 @@ const story = {
   tree: { nodes, edges },
   montage,
   diff,
+  codeDiff,
   profile,
   speed: { fast: FAST_TPS, slow: 50, fastTtftMs: FAST_TTFT_MS, slowTtftMs: 800, brainTokens, brainSeconds: +(brainTokens / FAST_TPS).toFixed(2) },
   bench: bench.seeds && bench.evolved ? bench : null,

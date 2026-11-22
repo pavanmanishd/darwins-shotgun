@@ -1,11 +1,10 @@
 import { AbsoluteFill, Sequence, useCurrentFrame } from "remotion";
-import { Footage } from "./Footage";
 import { COLORS, Grain, pulse } from "./fx";
 import type { HookVariant } from "./scenes/Hook";
 import { story } from "./story";
 import { Badge, type Music, Trailer } from "./Trailer";
-import { BAR, FPS } from "./timing";
-import { Chip, DISPLAY, MONO, fmt } from "./type";
+import { BAR, FPS, duration } from "./timing";
+import { Chip, DISPLAY, MONO, Typewriter, fmt } from "./type";
 
 export type VerticalProps = { hook: HookVariant; music: Music };
 
@@ -14,22 +13,7 @@ const VIDEO_H = Math.round((W * 1080) / 1920);
 const TOP = 560;
 const CODE_TOP = TOP + VIDEO_H + 64;
 
-const CODE_SEGMENTS: [number, number][] = [
-  [0.15, 6.3],
-  [6.6, 13.8],
-  [14.1, 19.9],
-  [6.6, 13.8],
-];
-
-function codeSequences() {
-  let at = 0;
-  return CODE_SEGMENTS.map(([from, to]) => {
-    const length = Math.round((to - from) * FPS);
-    const seq = { at, from, length };
-    at += length;
-    return seq;
-  });
-}
+const REPLAY_EVERY = 6 * FPS;
 
 const HEADLINES: Record<HookVariant, [string, string]> = {
   speed: ["a new imp brain", `every ${story.speed.brainSeconds.toFixed(1)} seconds`],
@@ -71,15 +55,17 @@ export const Vertical: React.FC<VerticalProps> = ({ hook, music }) => {
 
       <div style={{ position: "absolute", top: CODE_TOP, left: 60, width: 960 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-          <Chip color={COLORS.code}>● live · Kimi writing imp brains</Chip>
+          <Chip color={COLORS.code}>a brain Kimi wrote · measured speed</Chip>
           <span style={{ fontFamily: MONO, fontSize: 26, color: COLORS.ash, letterSpacing: "0.08em" }}>
             <b style={{ fontFamily: DISPLAY, fontWeight: 400, fontSize: 64, color: COLORS.code, letterSpacing: 0, lineHeight: 1 }}>{fmt(story.speed.fast)}</b> TOK/S
           </span>
         </div>
         <div style={{ position: "relative", marginTop: 16, width: 960, height: 440, overflow: "hidden", boxShadow: `0 0 0 2px ${COLORS.code}55, 0 0 60px ${COLORS.code}22` }}>
-          {codeSequences().map((c) => (
-            <Sequence key={c.at} from={c.at} durationInFrames={c.length}>
-              <Footage clip="live-fast" part="code" from={c.from} box={{ w: 960, h: 440 }} fit="cover" />
+          {Array.from({ length: Math.ceil(duration("teaser") / REPLAY_EVERY) }, (_, i) => (
+            <Sequence key={i} from={i * REPLAY_EVERY} durationInFrames={REPLAY_EVERY}>
+              <div style={{ position: "absolute", inset: 0, padding: "18px 22px", background: "#0b0d0b" }}>
+                <Typewriter text={story.championCode} at={6} cps={story.speed.fast * 3.6} style={{ fontSize: 15, lineHeight: 1.4, color: COLORS.code }} />
+              </div>
             </Sequence>
           ))}
         </div>

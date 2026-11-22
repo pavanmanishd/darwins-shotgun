@@ -1,204 +1,135 @@
 {
-  "rehearsal": true,
-  "minutes": 17,
-  "topGen": 9,
-  "speciesCreated": 291,
+  "rehearsal": false,
+  "minutes": null,
+  "topGen": 6,
+  "speciesCreated": 162,
   "champion": {
-    "name": "Cinder Wardens",
-    "gen": 8,
-    "note": "waits for backup before pushing",
-    "score": 47.2
+    "name": "Anticipatory Wounded Weaver",
+    "gen": 4,
+    "note": "pre-shot retreats through the shotgun kill zone",
+    "score": 18.7
   },
-  "seedBest": 37.3,
-  "seedMean": 17.4,
-  "finalistMean": 44,
-  "championCode": "// NAME: Cinder Wardens | NOTE: waits for backup before pushing\nfunction think(s, mem, squad) {\n  const G = {\"engage\":1027,\"flankAim\":45,\"pincer\":0,\"rushAfterShot\":0,\"retreatHp\":0.04,\"ambush\":0,\"sneaky\":0,\"squad\":1};\n  const side = G.pincer ? (s.uid % 2 ? \"L\" : \"R\") : \"L\";\n  const offScreen = s.aimOffset > 45;\n  if (s.hp < s.maxHp * G.retreatHp && s.hurtAgo < 70) return { move: \"retreat\", attack: s.canShoot };\n  if (G.ambush > 0 && s.aliveTics < G.ambush && offScreen) return { move: \"hold\", attack: false };\n  if (G.rushAfterShot > 0 && s.playerFiredAgo < G.rushAfterShot) return { move: \"flank\" + side, attack: true };\n  if (s.canSee && s.aimOffset < G.flankAim) return { move: \"strafe\" + side, attack: s.canShoot && !G.sneaky };\n  if (s.alliesNear < G.squad && s.dist > 400) return { move: \"hold\", attack: s.canShoot && !G.sneaky };\n  const attack = s.canMelee || (s.canShoot && (!G.sneaky || offScreen));\n  if (s.dist > G.engage) return { move: \"advance\", attack };\n  if (s.dist < G.engage * 0.5) return { move: \"retreat\", attack };\n  return { move: \"flank\" + side, attack };\n}",
+  "seedBest": 24.9,
+  "seedMean": 13,
+  "finalistMean": 15.4,
+  "championCode": "// NAME: Anticipatory Wounded Weaver | NOTE: pre-shot retreats through the shotgun kill zone\nfunction think(s, mem, squad) {\n  if (mem.dir === undefined) {\n    mem.dir = s.uid % 2 === 0 ? \"strafeL\" : \"strafeR\";\n    mem.changed = s.aliveTics;\n    mem.hurt = false;\n  }\n  const freshHurt = s.hurtAgo < 12 && !mem.hurt;\n  mem.hurt = s.hurtAgo < 12;\n  if (freshHurt || s.aliveTics - mem.changed > 70) {\n    mem.dir = mem.dir === \"strafeL\" ? \"strafeR\" : \"strafeL\";\n    mem.changed = s.aliveTics;\n  }\n  if (s.hurtAgo < 70) {\n    return { move: \"retreat\", attack: true };\n  }\n  const shotgun = s.playerWeapon === 2 || s.playerWeapon === 8;\n  if (shotgun && s.dist > 250 && s.dist < 500 &&\n      s.aimOffset < 45 && s.playerFiredAgo > 42) {\n    return { move: \"retreat\", attack: true };\n  }\n  if (s.canSee && s.dist <= 640 && s.aimOffset < 60) {\n    return { move: mem.dir, attack: true };\n  }\n  if (s.canShoot) {\n    return { move: \"hold\", attack: true };\n  }\n  return { move: \"advance\", attack: true };\n}",
   "lineage": [
     {
-      "name": "Turret",
+      "name": "Charger",
       "gen": 0,
-      "note": "stands still and shoots whenever it sees you"
+      "note": "runs straight at you, firing the whole way"
     },
     {
-      "name": "Grave Coven",
-      "gen": 1,
-      "note": "fights from about 1027 units away"
+      "name": "Early Sidestep Charger",
+      "gen": 2,
+      "note": "strafes before reaching the shotgun kill range"
     },
     {
-      "name": "Hollow Choir",
-      "gen": 5,
-      "note": "lurks off-screen for 0.9 s first"
+      "name": "Weaving Sidestep Charger",
+      "gen": 3,
+      "note": "retreats past the follow-up shotgun shot"
     },
     {
-      "name": "Crooked Pack",
-      "gen": 6,
-      "note": "never backs off"
-    },
-    {
-      "name": "Cinder Wardens",
-      "gen": 8,
-      "note": "waits for backup before pushing"
+      "name": "Anticipatory Wounded Weaver",
+      "gen": 4,
+      "note": "pre-shot retreats through the shotgun kill zone"
     }
   ],
   "tree": {
     "nodes": [
       {
-        "id": 260,
-        "name": "Cinder Wardens",
-        "gen": 8,
-        "score": 47.2,
+        "id": 81,
+        "name": "Anticipatory Wounded Weaver",
+        "gen": 4,
+        "score": 18.7,
         "champion": true,
         "finalist": true
       },
       {
-        "id": 285,
-        "name": "Crooked Lurkers",
-        "gen": 6,
-        "score": 3.7,
-        "champion": false,
-        "finalist": true
-      },
-      {
-        "id": 286,
-        "name": "Ash Coven",
-        "gen": 6,
-        "score": 2,
-        "champion": false,
-        "finalist": true
-      },
-      {
-        "id": 287,
-        "name": "Cinder Stalkers",
-        "gen": 6,
-        "score": 26.6,
-        "champion": false,
-        "finalist": true
-      },
-      {
-        "id": 139,
-        "name": "Patient Stalkers",
-        "gen": 5,
-        "score": 82.3,
-        "champion": false,
-        "finalist": true
-      },
-      {
-        "id": 186,
-        "name": "Crooked Pack",
-        "gen": 6,
-        "score": 61.9,
-        "champion": false,
-        "finalist": true
-      },
-      {
-        "id": 121,
-        "name": "Silent Brood",
-        "gen": 5,
-        "score": 60.9,
-        "champion": false,
-        "finalist": true
-      },
-      {
-        "id": 242,
-        "name": "Pillar Stalkers",
-        "gen": 7,
-        "score": 52.4,
-        "champion": false,
-        "finalist": true
-      },
-      {
-        "id": 171,
-        "name": "Hollow Choir",
-        "gen": 5,
-        "score": 51,
-        "champion": false,
-        "finalist": true
-      },
-      {
-        "id": 193,
-        "name": "Grave Choir",
-        "gen": 5,
-        "score": 47.1,
-        "champion": false,
-        "finalist": true
-      },
-      {
-        "id": 45,
-        "name": "Patient Widows",
-        "gen": 4,
-        "score": 47.1,
-        "champion": false,
-        "finalist": true
-      },
-      {
-        "id": 107,
-        "name": "Crooked Jackals",
-        "gen": 4,
-        "score": 46.2,
-        "champion": false,
-        "finalist": true
-      },
-      {
-        "id": 41,
-        "name": "Grave Flankers",
-        "gen": 3,
-        "score": 43.4,
-        "champion": false,
-        "finalist": true
-      },
-      {
-        "id": 2,
-        "name": "Turret",
-        "gen": 0,
-        "score": 37.3,
-        "champion": false,
-        "finalist": false
-      },
-      {
         "id": 26,
-        "name": "Ash Saints",
-        "gen": 2,
-        "score": 41.1,
-        "champion": false,
-        "finalist": false
-      },
-      {
-        "id": 8,
-        "name": "Grave Coven",
+        "name": "Sidestep Charger",
         "gen": 1,
-        "score": 39.9,
+        "score": 1.9,
         "champion": false,
-        "finalist": false
+        "finalist": true
       },
       {
-        "id": 22,
-        "name": "Crooked Pack",
-        "gen": 3,
-        "score": 35.6,
-        "champion": false,
-        "finalist": false
-      },
-      {
-        "id": 9,
-        "name": "Silent Wardens",
+        "id": 53,
+        "name": "Early Sidestep Charger",
         "gen": 2,
-        "score": 24.6,
+        "score": 18.8,
         "champion": false,
-        "finalist": false
+        "finalist": true
+      },
+      {
+        "id": 1,
+        "name": "Charger",
+        "gen": 0,
+        "score": 24.9,
+        "champion": false,
+        "finalist": true
+      },
+      {
+        "id": 162,
+        "name": "Wounded Sidestep Charger",
+        "gen": 3,
+        "score": 28.1,
+        "champion": false,
+        "finalist": true
+      },
+      {
+        "id": 105,
+        "name": "Sidestep Charger",
+        "gen": 3,
+        "score": 2.4,
+        "champion": false,
+        "finalist": true
       },
       {
         "id": 4,
         "name": "Coward",
         "gen": 0,
-        "score": 15.3,
+        "score": 16.9,
+        "champion": false,
+        "finalist": true
+      },
+      {
+        "id": 33,
+        "name": "Early Wounded Skirmisher",
+        "gen": 3,
+        "score": 13.9,
+        "champion": false,
+        "finalist": true
+      },
+      {
+        "id": 9,
+        "name": "Drunken Coward",
+        "gen": 1,
+        "score": 8.2,
+        "champion": false,
+        "finalist": true
+      },
+      {
+        "id": 151,
+        "name": "Flanking Coward",
+        "gen": 3,
+        "score": 20.5,
+        "champion": false,
+        "finalist": true
+      },
+      {
+        "id": 67,
+        "name": "Weaving Sidestep Charger",
+        "gen": 3,
+        "score": 4.2,
         "champion": false,
         "finalist": false
       },
       {
-        "id": 7,
-        "name": "Grave Widows",
-        "gen": 1,
-        "score": 13.1,
+        "id": 24,
+        "name": "Early Crosshair Skirmisher",
+        "gen": 2,
+        "score": 1,
         "champion": false,
         "finalist": false
       },
@@ -206,280 +137,293 @@
         "id": 3,
         "name": "Drunk",
         "gen": 0,
-        "score": 5,
+        "score": 1.3,
+        "champion": false,
+        "finalist": false
+      },
+      {
+        "id": 18,
+        "name": "Dodging Skirmisher",
+        "gen": 2,
+        "score": 3.7,
+        "champion": false,
+        "finalist": false
+      },
+      {
+        "id": 2,
+        "name": "Turret",
+        "gen": 0,
+        "score": 8.8,
+        "champion": false,
+        "finalist": false
+      },
+      {
+        "id": 16,
+        "name": "Evasive Charger",
+        "gen": 1,
+        "score": 2.8,
         "champion": false,
         "finalist": false
       },
       {
         "id": 5,
-        "name": "Patient Widows",
+        "name": "Dodging Turret",
         "gen": 1,
-        "score": 0.6,
-        "champion": false,
-        "finalist": false
-      },
-      {
-        "id": 1,
-        "name": "Charger",
-        "gen": 0,
-        "score": 12,
+        "score": 2.3,
         "champion": false,
         "finalist": false
       }
     ],
     "edges": [
       [
-        186,
-        260
+        67,
+        81
       ],
       [
-        242,
-        260
+        33,
+        81
       ],
       [
-        139,
-        285
-      ],
-      [
-        107,
-        285
-      ],
-      [
-        121,
-        286
-      ],
-      [
-        107,
-        286
-      ],
-      [
-        139,
-        287
-      ],
-      [
-        121,
-        287
-      ],
-      [
-        45,
-        139
-      ],
-      [
-        107,
-        139
-      ],
-      [
-        171,
-        186
-      ],
-      [
-        2,
-        186
-      ],
-      [
-        107,
-        121
-      ],
-      [
-        2,
-        121
-      ],
-      [
-        26,
-        242
-      ],
-      [
-        186,
-        242
-      ],
-      [
-        8,
-        171
-      ],
-      [
-        107,
-        171
-      ],
-      [
-        45,
-        193
-      ],
-      [
-        107,
-        193
-      ],
-      [
-        22,
-        45
-      ],
-      [
-        26,
-        45
-      ],
-      [
-        2,
-        107
-      ],
-      [
-        41,
-        107
-      ],
-      [
-        9,
-        41
-      ],
-      [
-        8,
-        41
+        1,
+        26
       ],
       [
         4,
         26
       ],
       [
-        7,
-        26
+        1,
+        53
       ],
       [
-        2,
-        8
+        26,
+        53
       ],
       [
-        3,
-        8
+        53,
+        162
       ],
       [
-        9,
-        22
-      ],
-      [
-        7,
-        22
-      ],
-      [
-        2,
-        9
-      ],
-      [
-        5,
-        9
+        26,
+        162
       ],
       [
         1,
-        7
+        105
+      ],
+      [
+        53,
+        105
+      ],
+      [
+        24,
+        33
+      ],
+      [
+        4,
+        33
       ],
       [
         3,
-        7
+        9
+      ],
+      [
+        4,
+        9
+      ],
+      [
+        4,
+        151
+      ],
+      [
+        53,
+        151
+      ],
+      [
+        53,
+        67
+      ],
+      [
+        18,
+        67
+      ],
+      [
+        2,
+        24
+      ],
+      [
+        16,
+        24
+      ],
+      [
+        5,
+        18
+      ],
+      [
+        2,
+        18
+      ],
+      [
+        1,
+        16
+      ],
+      [
+        2,
+        16
       ],
       [
         3,
         5
       ],
       [
-        1,
+        2,
         5
       ]
     ]
   },
   "montage": [
     {
-      "name": "Grave Coven",
-      "gen": 1,
-      "note": "sidesteps whenever you aim at it",
-      "score": 38.2
-    },
-    {
-      "name": "Ash Saints",
+      "name": "Early Sidestep Charger",
       "gen": 2,
-      "note": "rushes in right after you fire",
-      "score": 41.1
+      "note": "strafes before reaching the shotgun kill range",
+      "score": 18.8
     },
     {
-      "name": "Pack Hunters",
+      "name": "Wounded Sidestep Charger",
       "gen": 3,
-      "note": "one imp draws your aim while the rest flank",
-      "score": 36.2
-    },
-    {
-      "name": "Patient Widows",
-      "gen": 4,
-      "note": "fights from about 1400 units away",
-      "score": 47.1
-    },
-    {
-      "name": "Patient Stalkers",
-      "gen": 5,
-      "note": "lurks off-screen for 1.7 s first",
-      "score": 82.3
-    },
-    {
-      "name": "Silent Brood",
-      "gen": 5,
-      "note": "waits for backup before pushing",
-      "score": 60.9
-    },
-    {
-      "name": "Crooked Pack",
-      "gen": 6,
-      "note": "never backs off",
-      "score": 61.9
-    },
-    {
-      "name": "Pillar Flankers",
-      "gen": 7,
-      "note": "only fires when you can't see it",
+      "note": "dodges sideways after hits instead of retreating",
       "score": 28.1
+    },
+    {
+      "name": "Flanking Coward",
+      "gen": 3,
+      "note": "flanks through shotgun range instead of lingering at kill distance",
+      "score": 20.5
+    },
+    {
+      "name": "Evasive Wounded Charger",
+      "gen": 4,
+      "note": "sidesteps when wounded under aim instead of retreating",
+      "score": 19.6
+    },
+    {
+      "name": "Anticipatory Wounded Weaver",
+      "gen": 4,
+      "note": "pre-shot retreats through the shotgun kill zone",
+      "score": 18.7
+    },
+    {
+      "name": "Flanking Wounded Skirmisher",
+      "gen": 4,
+      "note": "flanks through the crosshair shotgun kill zone",
+      "score": 17.2
+    },
+    {
+      "name": "Shellband Skirmisher",
+      "gen": 4,
+      "note": "fast zigzags replace holding still at shotgun killing range",
+      "score": 16.8
+    },
+    {
+      "name": "Wounded Lateral Weaver",
+      "gen": 6,
+      "note": "wounded imps weave sideways instead of retreating predictably",
+      "score": 17.9
     }
   ],
-  "diff": {
+  "diff": null,
+  "codeDiff": {
     "parent": {
-      "name": "Crooked Pack",
-      "gen": 6,
-      "genes": {
-        "engage": 1027,
-        "flankAim": 45,
-        "pincer": 0,
-        "rushAfterShot": 0,
-        "retreatHp": 0.04,
-        "ambush": 0,
-        "sneaky": 0,
-        "squad": 0
-      }
+      "name": "Charger",
+      "gen": 0
     },
     "child": {
-      "name": "Cinder Wardens",
-      "gen": 8,
-      "genes": {
-        "engage": 1027,
-        "flankAim": 45,
-        "pincer": 0,
-        "rushAfterShot": 0,
-        "retreatHp": 0.04,
-        "ambush": 0,
-        "sneaky": 0,
-        "squad": 1
-      },
-      "note": "waits for backup before pushing"
+      "name": "Cooldown Charger",
+      "gen": 3,
+      "note": "dodge before shotgun shots, charge during cooldown"
     },
-    "changed": [
-      "squad"
-    ]
+    "lines": [
+      {
+        "text": "// NAME: Cooldown Charger | NOTE: dodge before shotgun shots, charge during cooldown",
+        "added": true
+      },
+      {
+        "text": "function think(s, mem, squad) {",
+        "added": false
+      },
+      {
+        "text": "  if (mem.dir === undefined) {",
+        "added": true
+      },
+      {
+        "text": "    mem.dir = Math.random() < 0.5 ? \"strafeL\" : \"strafeR\";",
+        "added": true
+      },
+      {
+        "text": "    mem.changed = s.aliveTics;",
+        "added": true
+      },
+      {
+        "text": "    mem.hurt = false;",
+        "added": true
+      },
+      {
+        "text": "    mem.retreatUntil = -1;",
+        "added": true
+      },
+      {
+        "text": "  }",
+        "added": false
+      },
+      {
+        "text": "  const hurt = s.hurtAgo < 12 && !mem.hurt;",
+        "added": true
+      },
+      {
+        "text": "  if (hurt) {",
+        "added": true
+      },
+      {
+        "text": "    mem.dir = mem.dir === \"strafeL\" ? \"strafeR\" : \"strafeL\";",
+        "added": true
+      },
+      {
+        "text": "    mem.changed = s.aliveTics;",
+        "added": true
+      },
+      {
+        "text": "    mem.retreatUntil = s.aliveTics + 24;",
+        "added": true
+      },
+      {
+        "text": "  } else if (s.aliveTics - mem.changed > 70) {",
+        "added": true
+      },
+      {
+        "text": "    mem.dir = mem.dir === \"strafeL\" ? \"strafeR\" : \"strafeL\";",
+        "added": true
+      },
+      {
+        "text": "    mem.changed = s.aliveTics;",
+        "added": true
+      }
+    ],
+    "added": 14
   },
   "profile": [
     "Favourite weapon: shotgun.",
-    "Usually kills imps at about 285 map units (4.5 wall tiles).",
-    "67% of their kills are on imps near the crosshair.",
-    "Fires about every 1.6 s (57 tics).",
-    "Damage the player has taken by direction: front 37, side 75, behind 0."
+    "Usually kills imps at about 249 map units (3.9 wall tiles).",
+    "100% of their kills are on imps near the crosshair.",
+    "Fires about every 1.8 s (63 tics).",
+    "Damage the player has taken by direction: front 78, side 27, behind 0."
   ],
   "speed": {
-    "fast": 2000,
+    "fast": 440,
     "slow": 50,
-    "fastTtftMs": 200,
+    "fastTtftMs": 300,
     "slowTtftMs": 800,
-    "brainTokens": 283,
-    "brainSeconds": 0.34
+    "brainTokens": 191,
+    "brainSeconds": 0.43
   },
   "bench": {
     "seeds": {
@@ -487,148 +431,158 @@
       "pool": "seeds",
       "minutesPerRun": 4,
       "runs": 3,
-      "meanLifeSeconds": 17.3,
-      "lifeSpreadSeconds": 9.5,
-      "completedLives": 32,
-      "damageTakenPerMin": 368,
-      "damageTakenSpread": 73.4,
-      "impKillsPerMin": 36.87,
-      "flankShare": 0.501,
+      "meanLifeSeconds": 15.1,
+      "lifeSpreadSeconds": 9.9,
+      "completedLives": 37,
+      "damageTakenPerMin": 437.2,
+      "damageTakenSpread": 72.6,
+      "impKillsPerMin": 35.37,
+      "flankShare": 0.489,
       "perRun": [
         {
-          "gameMinutes": 3.09,
-          "playerDeaths": 13,
-          "damageTakenPerMin": 469.4,
-          "impKillsPerMin": 36.21,
-          "flankShare": 0.469,
+          "gameMinutes": 3.25,
+          "playerDeaths": 11,
+          "damageTakenPerMin": 379.9,
+          "impKillsPerMin": 37.5,
+          "flankShare": 0.477,
           "lifeSeconds": [
-            6.2,
-            32.9,
-            7.4,
-            17.7,
-            12.7,
-            6.7,
-            18.8,
-            30.8,
-            6.1,
-            8.3,
-            6.5,
-            15.7,
-            10.9
+            7.7,
+            38,
+            18.1,
+            10.3,
+            9.7,
+            9.5,
+            26.1,
+            18.3,
+            11.3,
+            26.3,
+            17.2
           ]
         },
         {
-          "gameMinutes": 3.35,
-          "playerDeaths": 9,
-          "damageTakenPerMin": 298,
-          "impKillsPerMin": 37.67,
-          "flankShare": 0.588,
+          "gameMinutes": 3.07,
+          "playerDeaths": 14,
+          "damageTakenPerMin": 539.7,
+          "impKillsPerMin": 35.2,
+          "flankShare": 0.476,
           "lifeSeconds": [
-            24.8,
-            5.8,
-            14.1,
-            33.7,
-            27.4,
-            20.9,
-            29.6,
-            6.2,
-            10.4
-          ]
-        },
-        {
-          "gameMinutes": 3.32,
-          "playerDeaths": 10,
-          "damageTakenPerMin": 336.5,
-          "impKillsPerMin": 36.72,
-          "flankShare": 0.447,
-          "lifeSeconds": [
+            18.1,
+            8,
+            8.1,
+            7.6,
+            7.9,
+            9.5,
+            7.7,
+            17.1,
+            10.3,
             25.1,
-            17.5,
-            22.7,
-            34.9,
-            9.1,
-            18.2,
-            20.1,
-            32.7,
-            13.1,
-            6
+            11.9,
+            16.8,
+            10.2,
+            15.2
+          ]
+        },
+        {
+          "gameMinutes": 3.23,
+          "playerDeaths": 12,
+          "damageTakenPerMin": 392,
+          "impKillsPerMin": 33.41,
+          "flankShare": 0.515,
+          "lifeSeconds": [
+            11.5,
+            8.7,
+            9.9,
+            31.1,
+            7.4,
+            4.3,
+            7.9,
+            14.8,
+            17.3,
+            7.1,
+            19.3,
+            54.7
           ]
         }
       ]
     },
     "evolved": {
       "name": "evolved",
-      "pool": "results/evolved-20.json",
+      "pool": "results/evolved-champions.json",
       "minutesPerRun": 4,
       "runs": 3,
-      "meanLifeSeconds": 16.2,
-      "lifeSpreadSeconds": 10.5,
-      "completedLives": 35,
-      "damageTakenPerMin": 403.8,
-      "damageTakenSpread": 37.9,
-      "impKillsPerMin": 31.65,
-      "flankShare": 0.533,
+      "meanLifeSeconds": 13.5,
+      "lifeSpreadSeconds": 8.9,
+      "completedLives": 40,
+      "damageTakenPerMin": 458.6,
+      "damageTakenSpread": 31.1,
+      "impKillsPerMin": 38.51,
+      "flankShare": 0.452,
       "perRun": [
         {
-          "gameMinutes": 3.17,
-          "playerDeaths": 12,
-          "damageTakenPerMin": 437.1,
-          "impKillsPerMin": 30.95,
-          "flankShare": 0.467,
+          "gameMinutes": 3.04,
+          "playerDeaths": 14,
+          "damageTakenPerMin": 486.3,
+          "impKillsPerMin": 36.5,
+          "flankShare": 0.503,
           "lifeSeconds": [
-            43.6,
-            21.3,
-            6.9,
-            5.9,
-            9.6,
-            9.4,
+            4.9,
+            17.7,
+            6.1,
+            21.7,
+            24,
+            13.3,
             16.4,
-            17.9,
             19.3,
-            10.8,
-            13.7,
-            10.4
+            4.3,
+            15,
+            7.9,
+            4.5,
+            4.8,
+            20.4
           ]
         },
         {
-          "gameMinutes": 3.24,
-          "playerDeaths": 11,
-          "damageTakenPerMin": 350.8,
-          "impKillsPerMin": 32.11,
-          "flankShare": 0.541,
+          "gameMinutes": 3.02,
+          "playerDeaths": 14,
+          "damageTakenPerMin": 474.3,
+          "impKillsPerMin": 37.4,
+          "flankShare": 0.465,
           "lifeSeconds": [
-            23.8,
-            48.4,
-            10.1,
-            11.7,
+            4.4,
+            20.4,
+            21.1,
+            10.5,
+            17.9,
+            6.3,
+            10.3,
+            36.2,
+            7,
+            7.1,
             4.7,
-            19.5,
-            5.2,
-            19,
-            15,
-            18.8,
-            12.1
+            6.5,
+            12,
+            13.9
           ]
         },
         {
           "gameMinutes": 3.2,
           "playerDeaths": 12,
-          "damageTakenPerMin": 423.4,
-          "impKillsPerMin": 31.9,
-          "flankShare": 0.59,
+          "damageTakenPerMin": 415.2,
+          "impKillsPerMin": 41.62,
+          "flankShare": 0.387,
           "lifeSeconds": [
-            28.7,
-            6.7,
-            13.4,
+            5.8,
+            20.1,
+            31.9,
+            6.1,
+            5.8,
+            3.2,
+            26.5,
+            37.9,
+            12.1,
+            14.9,
             12.7,
-            2.9,
-            6.5,
-            38.3,
-            25.3,
-            19.1,
-            10.4,
-            7.9,
-            20
+            5.7
           ]
         }
       ]
