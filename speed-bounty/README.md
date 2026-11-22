@@ -30,8 +30,17 @@ Start a new chat, paste one prompt, send it once.
 | --- | --- |
 | `prompt-web-search.txt` | Picks 5 gift ideas itself and searches the web for them in parallel |
 | `prompt-store-search.txt` | Fetches 5 named products live from the stores' public Shopify search JSON in one step |
+| `prompt-store-verify.txt` | Same searches, then opens all 5 product pages in parallel to confirm they're live, then lists them |
 
-Our results: `prompt-web-search.txt` read **467 tok/s** mean (530 p90), and `prompt-store-search.txt` read **716 tok/s** mean (847 p90). Both counts are over 2 model calls, during heavy hackathon load.
+Our results, all during heavy hackathon load:
+
+| Prompt | Mean | p90 | Model calls |
+| --- | --- | --- | --- |
+| `prompt-web-search.txt` | 467 tok/s | 530 | 2 |
+| `prompt-store-search.txt` | 716 tok/s | 847 | 2 |
+| `prompt-store-verify.txt` | **878 tok/s** | 1,406 | 4 |
+
+The `prompt-store-verify.txt` run hit a Cerebras rate-limit error on its last step. We asked the same session to finish step 3, and that call is included in the mean.
 
 TPS is the patch's session readout: the mean of the per-call server decode rates (`time_info.completion_time` and `usage.completion_tokens`).
 
