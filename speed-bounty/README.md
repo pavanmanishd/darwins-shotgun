@@ -31,6 +31,8 @@ Start a new chat, paste one prompt, send it once.
 | `prompt-web-search.txt` | Picks 5 gift ideas itself and searches the web for them in parallel |
 | `prompt-store-search.txt` | Fetches 5 named products live from the stores' public Shopify search JSON in one step |
 
+Our results: `prompt-web-search.txt` read **467 tok/s** mean (530 p90), and `prompt-store-search.txt` read **716 tok/s** mean (847 p90). Both counts are over 2 model calls, during heavy hackathon load.
+
 TPS is the patch's session readout: the mean of the per-call server decode rates (`time_info.completion_time` and `usage.completion_tokens`).
 
 `edit.py` cuts a run recording into the entry video (60 s max). It fast-forwards queue time, which the server-side TPS doesn't include, and labels it.

@@ -11,7 +11,6 @@ from pathlib import Path
 
 FONT = "/System/Library/Fonts/Supplemental/Arial Bold.ttf"
 W, H, FPS = 1920, 1200, 30
-SPEEDUP = 12
 
 cfg = json.loads(Path(sys.argv[1]).read_text())
 out = sys.argv[2]
@@ -42,7 +41,8 @@ def blur_avatar(src):
 run, links = cfg["run"], cfg["links"]
 ans, end = cfg["answer_at"], cfg["run_end"]
 tps, p90 = cfg["tps_mean"], cfg["tps_p90"]
-scale = f"scale={W}:{H}:flags=lanczos,fps={FPS},setsar=1"
+SPEEDUP = cfg.get("speedup", 12)
+scale = f"scale={W}:{H}:force_original_aspect_ratio=decrease:flags=lanczos,pad={W}:{H}:(ow-iw)/2:(oh-ih)/2:color=0x0d0e12,fps={FPS},setsar=1"
 
 parts = []
 filters = []
