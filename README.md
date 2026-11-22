@@ -46,6 +46,7 @@ Controls: WASD move, arrows turn, Ctrl fire, Space use.
 | `sim/` | Headless runs: evolution (`run.mjs`), benchmarks (`bench.mjs`), clip capture, pool export |
 | `video/` | Remotion trailer and the generator for its original music |
 | `site/` | Static deploy of the public site (Cloudflare) |
+| `speed-bounty/` | Santa's Speedy Shopper entry: OpenClaw config, prompts, video cut script |
 
 ```sh
 cd sim && MINUTES=40 node run.mjs kimi-openclaw    # real evolution through the gateway

@@ -1,0 +1,7 @@
+Santa's Speedy Shopper: find 5 Christmas gifts on real shopping websites. Call web_fetch on all 5 of these live store searches at once, in one step:
+1. https://www.allbirds.com/search/suggest.json?q=wool%20runner&resources%5Btype%5D=product&resources%5Blimit%5D=1
+2. https://www.brooklinen.com/search/suggest.json?q=sheet%20set&resources%5Btype%5D=product&resources%5Blimit%5D=1
+3. https://fellowproducts.com/search/suggest.json?q=stagg%20kettle&resources%5Btype%5D=product&resources%5Blimit%5D=1
+4. https://www.rothys.com/search/suggest.json?q=flat&resources%5Btype%5D=product&resources%5Blimit%5D=1
+5. https://www.stanley1913.com/search/suggest.json?q=quencher&resources%5Btype%5D=product&resources%5Blimit%5D=1
+Then reply with only a numbered list, one line per gift: the exact product title, the price, and the product link (the store's domain + /products/ + the product handle). No other text.

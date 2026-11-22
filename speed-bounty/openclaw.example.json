@@ -1,0 +1,85 @@
+{
+  "gateway": {
+    "mode": "local",
+    "port": 18800,
+    "bind": "loopback",
+    "auth": {
+      "mode": "token",
+      "token": "${OPENCLAW_GATEWAY_TOKEN}"
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "cerebras/moonshotai-kimi-k3.1-pro-trial"
+      },
+      "thinkingDefault": "low",
+      "skipBootstrap": true,
+      "timeoutSeconds": 300
+    }
+  },
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "cerebras": {
+        "baseUrl": "https://api.cerebras.ai/v1",
+        "api": "openai-completions",
+        "apiKey": "${CEREBRAS_API_KEY}",
+        "models": [
+          {
+            "id": "moonshotai-kimi-k3.1-pro-trial",
+            "name": "Kimi K3.1 Pro (Cerebras)",
+            "reasoning": true,
+            "input": [
+              "text",
+              "image"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "compat": {
+              "supportsTools": true,
+              "supportsStrictMode": false,
+              "supportsReasoningEffort": true,
+              "supportedReasoningEfforts": [
+                "low",
+                "high",
+                "max"
+              ]
+            }
+          }
+        ],
+        "timeoutSeconds": 300
+      }
+    }
+  },
+  "tools": {
+    "profile": "minimal",
+    "alsoAllow": [
+      "web_search",
+      "web_fetch"
+    ],
+    "toolSearch": false,
+    "web": {
+      "search": {
+        "provider": "duckduckgo"
+      }
+    }
+  },
+  "plugins": {
+    "entries": {
+      "duckduckgo": {
+        "enabled": true,
+        "config": {
+          "webSearch": {
+            "region": "us-en",
+            "safeSearch": "moderate"
+          }
+        }
+      }
+    }
+  }
+}

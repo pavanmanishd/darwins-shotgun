@@ -1,0 +1,1 @@
+🎅 Santa's Speedy Shopper: find 5 Christmas gifts from real shopping websites. Pick 5 different gift ideas yourself (a mix of people to buy for), then call web_search for all 5 at once in a single step, in parallel. Use only product page links returned by the search. Reply with a numbered list: gift, store, price if shown, and the product page link.
